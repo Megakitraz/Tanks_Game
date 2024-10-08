@@ -14,6 +14,9 @@ namespace Mirror
         public int offsetX;
         public int offsetY;
 
+        public int width = 300;
+        public int height = 9999;
+
         void Awake()
         {
             manager = GetComponent<NetworkManager>();
@@ -22,9 +25,8 @@ namespace Mirror
         void OnGUI()
         {
             // If this width is changed, also change offsetX in GUIConsole::OnGUI
-            int width = 300;
 
-            GUILayout.BeginArea(new Rect(10 + offsetX, 40 + offsetY, width, 9999));
+            GUILayout.BeginArea(new Rect(10 + offsetX, 40 + offsetY, width, height));
 
             if (!NetworkClient.isConnected && !NetworkServer.active)
                 StartButtons();
