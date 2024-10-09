@@ -1,18 +1,19 @@
 using UnityEngine;
 using Mirror;
+using UnityEngine.AI;
+using System.Collections;
 
 public class PlayerMovement : NetworkBehaviour
 {
-    private void Update()
+    private NavMeshAgent m_agent;
+
+    private void Start()
     {
-        if (!isLocalPlayer) return;
+        m_agent = GetComponent<NavMeshAgent>();
+    }
 
-        float h = Input.GetAxis("Horizontal");
-        float v = Input.GetAxis("Vertical");
-
-        Vector3 playerMovement = new Vector3(h,v,0f);
-
-        transform.position = transform.position + playerMovement;
-
+    public void SetDestination(Vector3 destination)
+    {
+        m_agent.destination = destination;
     }
 }

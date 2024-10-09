@@ -4,5 +4,14 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Projet/Scenes/TestScene.unity
+    guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 1
+    path: Assets/Projet/Scenes/MapTestOffline.unity
+    guid: 46f88e67fc9ac4f43bdbaba3b037db6d
+  - enabled: 1
+    path: Assets/Projet/Scenes/MapTestOnline.unity
+    guid: 1907c02515349574397b54e439e934c7
   m_configObjects: {}
