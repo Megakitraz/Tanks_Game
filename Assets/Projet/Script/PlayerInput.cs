@@ -7,24 +7,14 @@ using UnityEngine.AI;
 public class PlayerInput : NetworkBehaviour
 {
     private PlayerMovement m_playerMovement;
-
-    [SerializeField] private int m_shootBufferTime;
+    private PlayerAttack m_playerAttack;
     private bool m_canShoot;
-
-    private Coroutine m_shootBufferCoroutine;
 
 
     private void Start()
     {
         m_playerMovement = GetComponent<PlayerMovement>();
-        m_canShoot = false;
-        m_shootBufferCoroutine = null;
-    }
-
-    IEnumerator ShootBuffer()
-    {
-        m_canShoot = true;
-        yield return new WaitForSeconds(m_shootBufferTime);
+        m_playerAttack = GetComponent<PlayerAttack>();
         m_canShoot = false;
     }
 
@@ -39,6 +29,7 @@ public class PlayerInput : NetworkBehaviour
 
             if (touch.phase == TouchPhase.Stationary)
             {
+                m_canShoot = false;
 
                 Ray ray = Camera.main.ScreenPointToRay(touch.position);
                 RaycastHit hit;
@@ -54,20 +45,19 @@ public class PlayerInput : NetworkBehaviour
             }
 
 
-            if (touch.phase == TouchPhase.Began && touch.phase == TouchPhase.Moved)
+            if (touch.phase == TouchPhase.Moved)
             {
-                if (m_shootBufferCoroutine == null)
-                {
-                    m_shootBufferCoroutine = StartCoroutine(ShootBuffer());
-                }
+                m_canShoot = true;
 
 
             }
 
-            if (touch.phase == TouchPhase.Ended && touch.phase == TouchPhase.Moved)
+            if (touch.phase == TouchPhase.Ended)
             {
-                //TODO Shoot de canon
-                if (m_canShoot) Debug.Log("Tir de canon");
+                if (m_canShoot)
+                {
+                    m_playerAttack.ShootMissile();
+                }
 
             }
         }
