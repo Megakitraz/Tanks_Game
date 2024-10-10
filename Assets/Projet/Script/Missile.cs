@@ -10,6 +10,7 @@ public class Missile : NetworkBehaviour
     [SerializeField] private float m_lifeTime;
 
     public PlayerAttack PlayerOwner;
+    public NetworkConnectionToClient ConnectionToClient;
 
     private void Start()
     {
@@ -26,15 +27,16 @@ public class Missile : NetworkBehaviour
     {
         yield return new WaitForSeconds(m_lifeTime);
 
-        Destroy(gameObject);
+        BeforeDestroy();
     }
 
-
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.gameObject == PlayerOwner) return;
+        Debug.Log($"OnTriggerEnter: {gameObject.name}-{other.name}");
 
-        if (collision.transform.TryGetComponent<PlayerStats>(out PlayerStats playerStats))
+        if (other.GetComponent<NetworkBehaviour>().connectionToClient == ConnectionToClient) return;
+
+        if (other.transform.TryGetComponent<PlayerStats>(out PlayerStats playerStats))
         {
             playerStats.Health -= 1;
             BeforeDestroy();
@@ -44,6 +46,6 @@ public class Missile : NetworkBehaviour
     private void BeforeDestroy()
     {
         PlayerOwner.m_missileGameObject = null;
-        Destroy(gameObject);
+        NetworkServer.Destroy(gameObject);
     }
 }

@@ -50,6 +50,7 @@ public class PlayerAttack : NetworkBehaviour
             // Get the Missile component and assign the player as the owner
             m_missile = m_missileGameObject.GetComponent<Missile>();
             m_missile.PlayerOwner = this;
+            m_missile.ConnectionToClient = connectionToClient;
 
             // Spawn the missile on the server and assign the connection of the player as the owner
             NetworkServer.Spawn(m_missileGameObject, connectionToClient);
