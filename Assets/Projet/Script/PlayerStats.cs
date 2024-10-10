@@ -10,7 +10,6 @@ public class PlayerStats : NetworkBehaviour
 
     private int m_health;
 
-    private Collider m_collider;
     [SerializeField] private GameObject m_body;
 
     private Coroutine m_hitInvicibility;
@@ -25,8 +24,10 @@ public class PlayerStats : NetworkBehaviour
         {
             if (m_hitInvicibility == null)
             {
-                m_hitInvicibility = StartCoroutine(HitInvicibility());
                 m_health = Mathf.Min(value, m_maxHealth);
+
+                if (m_health != m_maxHealth) m_hitInvicibility = StartCoroutine(HitInvicibility());
+                
                 if (m_health <= 0)
                 {
                     Dying();
@@ -46,7 +47,6 @@ public class PlayerStats : NetworkBehaviour
     {
         Health = m_maxHealth;
         m_hitInvicibility = null;
-        m_collider = GetComponent<Collider>();
     }
 
     private void Dying()
@@ -59,7 +59,6 @@ public class PlayerStats : NetworkBehaviour
     IEnumerator HitInvicibility()
     {
         float divideTime = m_invicibleTime / 6f;
-        m_collider.enabled = false;
 
         for (int i = 0; i < 3; i++) 
         {
@@ -71,8 +70,6 @@ public class PlayerStats : NetworkBehaviour
 
             yield return new WaitForSeconds(divideTime);
         }
-
-        m_collider.enabled = true;
 
         m_hitInvicibility = null;
     }
