@@ -27,6 +27,7 @@ public class PlayerInput : NetworkBehaviour
         {
             Touch touch = Input.GetTouch(0);
 
+            
             if (touch.phase == TouchPhase.Stationary)
             {
                 m_canShoot = false;
@@ -43,6 +44,7 @@ public class PlayerInput : NetworkBehaviour
                     m_playerMovement.SetDestination(hit.point);
                 }
             }
+            
 
 
             if (touch.phase == TouchPhase.Moved)
