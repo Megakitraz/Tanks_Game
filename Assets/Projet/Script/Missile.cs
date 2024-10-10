@@ -37,12 +37,13 @@ public class Missile : NetworkBehaviour
         if (collision.transform.TryGetComponent<PlayerStats>(out PlayerStats playerStats))
         {
             playerStats.Health -= 1;
-            Destroy(gameObject);
+            BeforeDestroy();
         }
     }
 
-    private void OnDestroy()
+    private void BeforeDestroy()
     {
         PlayerOwner.m_missileGameObject = null;
+        Destroy(gameObject);
     }
 }
