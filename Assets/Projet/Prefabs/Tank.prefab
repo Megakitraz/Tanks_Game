@@ -409,7 +409,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   m_maxHealth: 5
-  m_invicibleTime: 3
+  m_invincibleTime: 3
   m_body: {fileID: 5492753416133792375}
 --- !u!114 &8571139096227147168
 MonoBehaviour:
