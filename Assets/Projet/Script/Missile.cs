@@ -34,11 +34,20 @@ public class Missile : NetworkBehaviour
     {
         Debug.Log($"OnTriggerEnter: {gameObject.name}-{other.name}");
 
-        if (other.GetComponent<NetworkBehaviour>().connectionToClient == ConnectionToClient) return;
+        
+        if(other.TryGetComponent<NetworkBehaviour>(out NetworkBehaviour networkBehaviour))
+        {
+            if (networkBehaviour.connectionToClient == ConnectionToClient) return;
+        }
 
         if (other.transform.TryGetComponent<PlayerStats>(out PlayerStats playerStats))
         {
             playerStats.Health -= 1;
+            BeforeDestroy();
+        }
+
+        if (other.transform.TryGetComponent<Wall>(out Wall wall))
+        {
             BeforeDestroy();
         }
     }

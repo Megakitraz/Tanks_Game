@@ -132,7 +132,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3023307325487381672, guid: 512608949b609f5438434c64196d72f4, type: 3}
       propertyPath: onlineScene
-      value: Assets/Projet/Scenes/MapTestOnline.unity
+      value: Assets/Projet/Scenes/Maps/Map1Online.unity
       objectReference: {fileID: 0}
     - target: {fileID: 3023307325487381672, guid: 512608949b609f5438434c64196d72f4, type: 3}
       propertyPath: offlineScene
