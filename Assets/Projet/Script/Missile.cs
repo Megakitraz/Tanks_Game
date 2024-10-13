@@ -9,14 +9,13 @@ public class Missile : NetworkBehaviour
 
     [SerializeField] private float m_lifeTime;
 
-    public PlayerAttack PlayerOwner;
+    [SyncVar] public PlayerAttack PlayerOwner;
     public NetworkConnectionToClient ConnectionToClient;
 
     private void Start()
     {
         StartCoroutine(LifeTime());
     }
-
 
     private void Update()
     {
@@ -34,8 +33,7 @@ public class Missile : NetworkBehaviour
     {
         Debug.Log($"OnTriggerEnter: {gameObject.name}-{other.name}");
 
-        
-        if(other.TryGetComponent<NetworkBehaviour>(out NetworkBehaviour networkBehaviour))
+        if (other.TryGetComponent<NetworkBehaviour>(out NetworkBehaviour networkBehaviour))
         {
             if (networkBehaviour.connectionToClient == ConnectionToClient) return;
         }
@@ -54,7 +52,12 @@ public class Missile : NetworkBehaviour
 
     private void BeforeDestroy()
     {
-        PlayerOwner.m_missileGameObject = null;
+        // Null check for PlayerOwner to avoid the error
+        if (PlayerOwner != null)
+        {
+            PlayerOwner.m_missileGameObject = null;
+        }
+
         NetworkServer.Destroy(gameObject);
     }
 }
