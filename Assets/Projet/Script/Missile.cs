@@ -9,11 +9,21 @@ public class Missile : NetworkBehaviour
 
     [SerializeField] private float m_lifeTime;
 
+    [SerializeField] private int m_maxBounceOnWall;
+
+    private float m_cooldownOnBounce;
+    private float m_timeOfLastBounce;
+
+    private int m_bounceOnWall;
+
     [SyncVar] public PlayerAttack PlayerOwner;
     public NetworkConnectionToClient ConnectionToClient;
 
     private void Start()
     {
+        m_cooldownOnBounce = 0.1f;
+        m_timeOfLastBounce = -m_cooldownOnBounce;
+
         StartCoroutine(LifeTime());
     }
 
@@ -29,11 +39,11 @@ public class Missile : NetworkBehaviour
         BeforeDestroy();
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision other)
     {
-        Debug.Log($"OnTriggerEnter: {gameObject.name}-{other.name}");
+        Debug.Log($"OnCollisionEnter: {gameObject.name}-{other.transform.name}");
 
-        if (other.TryGetComponent<NetworkBehaviour>(out NetworkBehaviour networkBehaviour))
+        if (other.transform.TryGetComponent<NetworkBehaviour>(out NetworkBehaviour networkBehaviour))
         {
             if (networkBehaviour.connectionToClient == ConnectionToClient) return;
         }
@@ -46,8 +56,30 @@ public class Missile : NetworkBehaviour
 
         if (other.transform.TryGetComponent<Wall>(out Wall wall))
         {
-            BeforeDestroy();
+
+            if (m_bounceOnWall < m_maxBounceOnWall + 1)
+            {
+                if(m_timeOfLastBounce + m_cooldownOnBounce < Time.time) Bounce(other.contacts[0].normal);
+            }
+            else
+            {
+                BeforeDestroy();
+            }
         }
+    }
+
+    private void Bounce(Vector3 normal)
+    {
+
+        m_bounceOnWall++;
+        Vector3 vectorToReverse = -Vector3.Project(transform.forward, normal);
+        Vector3 vectorToKeep = Vector3.ProjectOnPlane(transform.forward, normal);
+
+        transform.forward = vectorToReverse + vectorToKeep;
+
+        m_timeOfLastBounce = Time.time;
+
+        Debug.Log($"Bounce: {m_bounceOnWall}");
     }
 
     private void BeforeDestroy()
