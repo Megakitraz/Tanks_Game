@@ -54,7 +54,7 @@ public class PlayerStats : NetworkBehaviour
         if (newHealth < oldHealth && m_hitInvincibility == null && newHealth > 0)
         {
             // Start hit invincibility coroutine on clients
-            StartCoroutine(HitInvincibility());
+            m_hitInvincibility = StartCoroutine(HitInvincibility());
         }
 
         UnityEngine.Debug.Log($"{name} health: {newHealth}");
